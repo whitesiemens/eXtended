@@ -1,3 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+	<!-- Define controller -->
+	<item type="id" name="controller_extendedSettings" />
+
+	<!-- Define basic setting -->
+	<item type="id" name="basic_setting" />
+
+	<!-- Extended settings ids -->
+	<item type="id" name="btn_extendedSettings" />
+	<item type="id" name="btn_generalSettings" />
+	<item type="id" name="btn_appearanceSettings" />
+	<item type="id" name="btn_chatsSettings" />
+	<item type="id" name="btn_miscSettings" />
+	<item type="id" name="btn_extendedChannel" />
+	<item type="id" name="btn_extendedChat" />
+	<item type="id" name="btn_extendedSources" />
+	<item type="id" name="btn_extendedTranslate" />
+
 </resources>

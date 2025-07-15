@@ -30,6 +30,8 @@ import androidx.collection.SparseArrayCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tgx.extended.ui.ExtendedSettingsController;
+
 import org.drinkless.tdlib.TdApi;
 import org.thunderdog.challegram.BuildConfig;
 import org.thunderdog.challegram.N;
@@ -490,6 +492,8 @@ public class SettingsController extends ViewController<Void> implements
           view.setData(Lang.getString(R.string.ViewSourceCodeChangesSince, Lang.codeCreator(), previousVersionName, previousBuildInfo.getCommit()));
         } else if (itemId == R.id.btn_copyDebug) {
           view.setData(R.string.CopyReportDataInfo);
+        } else if (itemId == R.id.btn_extendedSettings) {
+          view.setData(R.string.ExtendedSettingsDesc);
         } else if (itemId == R.id.btn_devices) {
           if (sessions == null) {
             view.setData(R.string.LoadingInformation);
@@ -610,6 +614,10 @@ public class SettingsController extends ViewController<Void> implements
     if (addedActionItems > 0) {
       items.add(new ListItem(ListItem.TYPE_SHADOW_BOTTOM));
     }
+
+    items.add(new ListItem(ListItem.TYPE_SHADOW_TOP));
+    items.add(new ListItem(ListItem.TYPE_VALUED_SETTING_COMPACT, R.id.btn_extendedSettings, R.drawable.baseline_settings_suggest_24, R.string.ExtendedSettings));
+    items.add(new ListItem(ListItem.TYPE_SHADOW_BOTTOM));
 
     items.add(new ListItem(ListItem.TYPE_SHADOW_TOP));
     items.add(new ListItem(ListItem.TYPE_VALUED_SETTING_COMPACT, R.id.btn_devices, R.drawable.baseline_devices_other_24, R.string.Devices));
@@ -1135,6 +1143,8 @@ public class SettingsController extends ViewController<Void> implements
       navigateTo(new SettingsLanguageController(context, tdlib));
     } else if (viewId == R.id.btn_notificationSettings) {
       navigateTo(new SettingsNotificationController(context, tdlib));
+    } else if (viewId == R.id.btn_extendedSettings) {
+      navigateTo(new ExtendedSettingsController(context, tdlib));
     } else if (viewId == R.id.btn_devices) {
       navigateTo(new SettingsSessionsController(context, tdlib));
     } else if (viewId == R.id.btn_checkUpdates) {

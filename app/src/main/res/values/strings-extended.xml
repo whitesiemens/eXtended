@@ -1,3 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+	<!-- Define links -->
+	<string name="ExtendedChanneLink" translatable="false">https://t.me/tgx_extended</string>
+	<string name="ExtendedChatLink" translatable="false">https://t.me/tgx_extended_chat</string>
+	<string name="ExtendedSourcesLink" translatable="false">https://github.com/whitesiemens/eXtended</string>
+	<string name="ExtendedTranslateLink" translatable="false"></string>
+
+	<!-- Extended settings strings -->
+	<string name="ExtendedSettings">eXtended settings</string>
+	<string name="ExtendedSettingsDesc">Try out our new settings!</string>
+
+	<string name="AboutExtended">About</string>
+	<string name="GeneralSetttings">General</string>
+	<string name="AppearanceSettings">Appearance</string>
+	<string name="ChatsSettings">Chats</string>
+	<string name="MiscSettings">Misc</string>
+	<string name="ExtendedChannel">Official channel</string>
+	<string name="ExtendedChannelDesc">Subscribe and get the latest updates</string>
+	<string name="ExtendedChat">Official chat</string>
+	<string name="ExtendedChatDesc">Join our users community</string>
+	<string name="ExtendedSources">View source code</string>
+	<string name="ExtendedSourcesDesc">eXtended is an open source project, enjoy</string>
+	<string name="ExtendedTranslate">Translate eXtended</string>
+	<string name="ExtendedTranslateDesc">Help translate eXtended into your language</string>
+
 </resources>
