@@ -49,6 +49,8 @@ import androidx.annotation.WorkerThread;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tgx.extended.ExtendedConfig;
+
 import org.drinkless.tdlib.Client;
 import org.drinkless.tdlib.TdApi;
 import org.thunderdog.challegram.BaseActivity;
@@ -1763,6 +1765,16 @@ public class ProfileController extends ViewController<ProfileController.Args> im
           } else {
             view.setData(R.string.PhoneNumberUnknown);
           }
+        } else if (itemId == R.id.btn_userId) {
+          switch (mode) {
+            case Mode.USER:
+            case Mode.SECRET:
+            case Mode.CHANNEL:
+            case Mode.SUPERGROUP: {
+              view.setData(String.valueOf(chat.id));
+              break;
+            }
+          }
         } else if (itemId == R.id.btn_notifications) {
           TdApi.Chat cachedChat = tdlib.chat(chat.id);
           view.setIcon(tdlib.ui().getIconForSetting(cachedChat));
@@ -2409,6 +2421,18 @@ public class ProfileController extends ViewController<ProfileController.Args> im
     }
   }
 
+  private ListItem newUserIdItem () {
+    switch (mode) {
+      case Mode.USER:
+      case Mode.SECRET:
+      case Mode.CHANNEL:
+      case Mode.SUPERGROUP: {
+        return new ListItem(ListItem.TYPE_INFO_SETTING, R.id.btn_userId, R.drawable.baseline_identifier_24, R.string.UserId, false);
+      }
+    }
+    return null;
+  }
+
   private ListItem newPhoneItem () {
     return new ListItem(ListItem.TYPE_INFO_SETTING, R.id.btn_phone, R.drawable.baseline_phone_24, R.string.PhoneMobile);
   }
@@ -2449,6 +2473,15 @@ public class ProfileController extends ViewController<ProfileController.Args> im
         items.add(usernameItem);
         addedCount++;
       }
+    }
+
+    final ListItem userIdItem = newUserIdItem();
+    if (ExtendedConfig.instance().get(ExtendedConfig.Setting.SHOW_IDS) && userIdItem != null) {
+      if (addedCount > 0) {
+        items.add(new ListItem(ListItem.TYPE_SEPARATOR_FULL));
+      }
+      items.add(userIdItem);
+      addedCount++;
     }
 
     if (userFull != null) {
@@ -3054,6 +3087,15 @@ public class ProfileController extends ViewController<ProfileController.Args> im
       }
     }
 
+    final ListItem userIdItem = newUserIdItem();
+    if (ExtendedConfig.instance().get(ExtendedConfig.Setting.SHOW_IDS) && userIdItem != null) {
+      if (addedCount > 0) {
+        items.add(new ListItem(ListItem.TYPE_SEPARATOR_FULL));
+      }
+      items.add(userIdItem);
+      addedCount++;
+    }
+
     if (tdlib.canCreateInviteLink(chat) && !isPublic) {
       if (addedCount > 0) {
         items.add(new ListItem(ListItem.TYPE_SEPARATOR_FULL));
@@ -3137,6 +3179,15 @@ public class ProfileController extends ViewController<ProfileController.Args> im
         items.add(usernameItem);
         addedCount++;
       }
+    }
+
+    final ListItem userIdItem = newUserIdItem();
+    if (ExtendedConfig.instance().get(ExtendedConfig.Setting.SHOW_IDS) && userIdItem != null) {
+      if (addedCount > 0) {
+        items.add(new ListItem(ListItem.TYPE_SEPARATOR_FULL));
+      }
+      items.add(userIdItem);
+      addedCount++;
     }
 
     /*if (canManageChat()) {
@@ -4810,6 +4861,19 @@ public class ProfileController extends ViewController<ProfileController.Args> im
       icons.append(R.drawable.baseline_forward_24);
 
       showOptions("@" + tdlib.chatUsername(chat.id), ids.get(), strings.get(), null, icons.get());
+    } else if (viewId == R.id.btn_userId) {
+      IntList ids = new IntList(1);
+      StringList strings = new StringList(1);
+      IntList icons = new IntList(1);
+
+      ids.append(R.id.btn_copyText);
+      strings.append(R.string.Copy);
+      icons.append(R.drawable.baseline_content_copy_24);
+
+      showOptions(chat.id, ids.get(), strings.get(), null, icons.get(), (itemView, id) -> {
+        UI.copyText(String.valueOf(chat.id), R.string.CopiedText);
+        return true;
+      });
     } else if (viewId == R.id.btn_birthdate) {
       TdApi.Birthdate birthdate = userFull != null ? userFull.birthdate : null;
       if (birthdate != null) {

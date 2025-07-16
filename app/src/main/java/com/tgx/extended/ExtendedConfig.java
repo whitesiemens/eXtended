@@ -97,8 +97,8 @@ public class ExtendedConfig {
 
   // eXtended settings
   public enum Setting {
-    // Basic setting
-    BASIC_SETTING("basic", false, false);
+    // General
+    SHOW_IDS("show_ids", false, true);
 
     public final String key;
     public final boolean defaultValue;

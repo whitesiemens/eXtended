@@ -18,4 +18,8 @@
 	<item type="id" name="btn_extendedSources" />
 	<item type="id" name="btn_extendedTranslate" />
 
+	<!-- General settings ids -->
+	<item type="id" name="btn_showUserId" />
+    <item type="id" name="btn_userId" />
+
 </resources>

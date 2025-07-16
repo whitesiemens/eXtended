@@ -25,4 +25,9 @@
 	<string name="ExtendedTranslate">Translate eXtended</string>
 	<string name="ExtendedTranslateDesc">Help translate eXtended into your language</string>
 
+	<!-- General settings strings -->
+	<string name="ProfilePreferences">Profile</string>
+	<string name="ShowUserId">Show user IDs in profile</string>
+	<string name="UserId">User ID</string>
+
 </resources>

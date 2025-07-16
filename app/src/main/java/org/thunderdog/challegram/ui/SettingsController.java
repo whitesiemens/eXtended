@@ -30,6 +30,7 @@ import androidx.collection.SparseArrayCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tgx.extended.ExtendedConfig;
 import com.tgx.extended.ui.ExtendedSettingsController;
 
 import org.drinkless.tdlib.TdApi;
@@ -107,7 +108,7 @@ public class SettingsController extends ViewController<Void> implements
   Menu, MoreDelegate, OptionDelegate,
   TdlibCache.MyUserDataChangeListener, ConnectionListener, StickersListener, MediaLayout.MediaGalleryCallback,
   ActivityResultHandler, View.OnLongClickListener, SessionListener, GlobalTokenStateListener, TdlibCache.UserDataChangeListener,
-  TdlibOptionListener {
+  TdlibOptionListener, ExtendedConfig.SettingsChangeListener {
 
   private final AvatarPickerManager avatarPickerManager;
   private ComplexHeaderView headerCell;
@@ -140,6 +141,13 @@ public class SettingsController extends ViewController<Void> implements
     if (!oneShot) {
       oneShot = true;
       tdlib.listeners().subscribeToStickerUpdates(this);
+    }
+  }
+
+  @Override
+  public void onSettingsChanged(ExtendedConfig.Setting setting, boolean newVal, boolean oldVal) {
+    if (setting == ExtendedConfig.Setting.SHOW_IDS) {
+      this.contentView.setAdapter(adapter);
     }
   }
 
@@ -560,6 +568,13 @@ public class SettingsController extends ViewController<Void> implements
             int collectibleCount = Td.secondaryUsernamesCount(myUsernames);
             view.setData("@" + myUsernames.editableUsername + (collectibleCount != 0 ? " + " + Lang.pluralBold(R.string.xOtherUsernames, collectibleCount) : "")); // TODO multi-username support
           }
+        } else if (itemId == R.id.btn_userId) {
+          final TdApi.User user = tdlib.myUser();
+          if (user != null) {
+            view.setData(user.id);
+          } else {
+            view.setData(R.string.unknownUser);
+          }
         } else if (itemId == R.id.btn_peer_id) {
           view.setData(Strings.buildCounter(tdlib.myUserId(true)));
         } else if (itemId == R.id.btn_phone) {
@@ -588,6 +603,10 @@ public class SettingsController extends ViewController<Void> implements
     items.add(new ListItem(ListItem.TYPE_EMPTY_OFFSET));
     if (Settings.instance().showPeerIds()) {
       items.add(new ListItem(ListItem.TYPE_INFO_SETTING, R.id.btn_peer_id, R.drawable.baseline_identifier_24, R.string.UserId).setContentStrings(R.string.LoadingInformation, R.string.LoadingInformation));
+      items.add(new ListItem(ListItem.TYPE_SEPARATOR));
+    }
+    if (ExtendedConfig.instance().get(ExtendedConfig.Setting.SHOW_IDS)) {
+      items.add(new ListItem(ListItem.TYPE_INFO_SETTING, R.id.btn_userId, R.drawable.baseline_identifier_24, R.string.UserId));
       items.add(new ListItem(ListItem.TYPE_SEPARATOR));
     }
     items.add(new ListItem(ListItem.TYPE_INFO_SETTING, R.id.btn_username, R.drawable.baseline_alternate_email_24, R.string.Username).setContentStrings(R.string.LoadingUsername, R.string.SetUpUsername));
@@ -1139,6 +1158,22 @@ public class SettingsController extends ViewController<Void> implements
         }
         return true;
       });
+    } else if (viewId == R.id.btn_userId) {
+      final TdApi.User user = tdlib.myUser();
+      IntList ids = new IntList(1);
+      StringList strings = new StringList(1);
+      IntList icons = new IntList(1);
+
+      ids.append(R.id.btn_copyText);
+      strings.append(R.string.Copy);
+      icons.append(R.drawable.baseline_content_copy_24);
+
+      if (user != null) {
+        showOptions(user.id, ids.get(), strings.get(), null, icons.get(), (itemView, id) -> {
+          UI.copyText(String.valueOf(user.id), R.string.CopiedText);
+          return true;
+        });
+      }
     } else if (viewId == R.id.btn_languageSettings) {
       navigateTo(new SettingsLanguageController(context, tdlib));
     } else if (viewId == R.id.btn_notificationSettings) {

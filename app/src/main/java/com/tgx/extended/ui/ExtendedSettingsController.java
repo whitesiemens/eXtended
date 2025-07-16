@@ -93,7 +93,7 @@ public class ExtendedSettingsController extends RecyclerViewController<ExtendedS
   }
 
   private static final Map<Integer, Setting> toggleSettingsMapping = Map.of(
-    R.id.basic_setting, BASIC_SETTING
+    R.id.btn_showUserId, SHOW_IDS
   );
 
   private void toggleSettingByViewId(int id) {
@@ -126,7 +126,10 @@ public class ExtendedSettingsController extends RecyclerViewController<ExtendedS
     items.add(new ListItem(ListItem.TYPE_EMPTY_OFFSET_SMALL));
 
     if (mode == MODE_GENERAL) {
-      // TODO: General settings
+      items.add(new ListItem(ListItem.TYPE_HEADER, 0, 0, R.string.ProfilePreferences));
+      items.add(new ListItem(ListItem.TYPE_SHADOW_TOP));
+      items.add(new ListItem(ListItem.TYPE_RADIO_SETTING, R.id.btn_showUserId, 0, R.string.ShowUserId));
+      items.add(new ListItem(ListItem.TYPE_SHADOW_BOTTOM));
     } else if (mode == MODE_APPEARANCE) {
       // TODO: Appearance settings
     } else if (mode == MODE_CHATS) {
