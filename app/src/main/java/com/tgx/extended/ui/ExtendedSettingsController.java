@@ -93,6 +93,7 @@ public class ExtendedSettingsController extends RecyclerViewController<ExtendedS
   }
 
   private static final Map<Integer, Setting> toggleSettingsMapping = Map.of(
+    R.id.btn_hidePhoneNumber, HIDE_PHONE_NUMBER,
     R.id.btn_showUserId, SHOW_IDS
   );
 
@@ -119,6 +120,8 @@ public class ExtendedSettingsController extends RecyclerViewController<ExtendedS
         else if (id == R.id.btn_extendedChat) setData(view, R.string.ExtendedChatDesc);
         else if (id == R.id.btn_extendedSources) setData(view, R.string.ExtendedSourcesDesc);
         else if (id == R.id.btn_extendedTranslate) setData(view, R.string.ExtendedTranslateDesc);
+        else if (id == R.id.btn_hidePhoneNumber) setToggle(view, HIDE_PHONE_NUMBER, isUpdate);
+        else if (id == R.id.btn_showUserId) setToggle(view, SHOW_IDS, isUpdate);
       }
     };
 
@@ -128,6 +131,8 @@ public class ExtendedSettingsController extends RecyclerViewController<ExtendedS
     if (mode == MODE_GENERAL) {
       items.add(new ListItem(ListItem.TYPE_HEADER, 0, 0, R.string.ProfilePreferences));
       items.add(new ListItem(ListItem.TYPE_SHADOW_TOP));
+      items.add(new ListItem(ListItem.TYPE_RADIO_SETTING, R.id.btn_hidePhoneNumber, 0, R.string.HidePhoneNumber));
+      items.add(new ListItem(ListItem.TYPE_SEPARATOR_FULL));
       items.add(new ListItem(ListItem.TYPE_RADIO_SETTING, R.id.btn_showUserId, 0, R.string.ShowUserId));
       items.add(new ListItem(ListItem.TYPE_SHADOW_BOTTOM));
     } else if (mode == MODE_APPEARANCE) {

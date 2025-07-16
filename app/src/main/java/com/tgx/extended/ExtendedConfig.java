@@ -98,6 +98,7 @@ public class ExtendedConfig {
   // eXtended settings
   public enum Setting {
     // General
+    HIDE_PHONE_NUMBER("hide_phone_number", false, true),
     SHOW_IDS("show_ids", false, true);
 
     public final String key;

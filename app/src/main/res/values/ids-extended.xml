@@ -19,6 +19,7 @@
 	<item type="id" name="btn_extendedTranslate" />
 
 	<!-- General settings ids -->
+	<item type="id" name="btn_hidePhoneNumber" />
 	<item type="id" name="btn_showUserId" />
     <item type="id" name="btn_userId" />
 

@@ -26,6 +26,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tgx.extended.ExtendedConfig;
+
 import org.drinkless.tdlib.TdApi;
 import org.thunderdog.challegram.FillingDrawable;
 import org.thunderdog.challegram.R;
@@ -62,7 +64,7 @@ import me.vkryl.core.ColorUtils;
 import me.vkryl.core.StringUtils;
 import me.vkryl.core.lambda.Destroyable;
 
-public class DrawerHeaderView extends View implements Destroyable, GlobalAccountListener, GlobalCountersListener, FactorAnimator.Target, ClickHelper.Delegate, TGLegacyManager.EmojiLoadListener {
+public class DrawerHeaderView extends View implements Destroyable, GlobalAccountListener, GlobalCountersListener, FactorAnimator.Target, ClickHelper.Delegate, TGLegacyManager.EmojiLoadListener, ExtendedConfig.SettingsChangeListener {
   private static final int DRAWER_ALPHA = 90;
 
   // private final TextPaint namePaint, phonePaint;
@@ -103,6 +105,7 @@ public class DrawerHeaderView extends View implements Destroyable, GlobalAccount
     setUser(account);
 
     TGLegacyManager.instance().addEmojiListener(this);
+    ExtendedConfig.instance().addSettingsListener(this);
 
     ViewUtils.setBackground(this, new FillingDrawable(ColorId.headerBackground) {
       @Override
@@ -146,6 +149,13 @@ public class DrawerHeaderView extends View implements Destroyable, GlobalAccount
   @Override
   public void onEmojiUpdated (boolean isPackSwitch) {
     invalidate();
+  }
+
+  @Override
+  public void onSettingsChanged(ExtendedConfig.Setting setting, boolean newVal, boolean oldVal) {
+    if (setting == ExtendedConfig.Setting.HIDE_PHONE_NUMBER) {
+      setUser(currentAccount);
+    }
   }
 
   private int getTextColor (float factor) {
@@ -197,6 +207,7 @@ public class DrawerHeaderView extends View implements Destroyable, GlobalAccount
     TdlibManager.instance().global().removeAccountListener(this);
     TdlibManager.instance().global().removeCountersListener(this);
     TGLegacyManager.instance().removeEmojiListener(this);
+    ExtendedConfig.instance().removeSettingsListener(this);
     if (displayInfoFuture != null) {
       displayInfoFuture.performDestroy();
       displayInfoFuture = null;
@@ -275,6 +286,7 @@ public class DrawerHeaderView extends View implements Destroyable, GlobalAccount
     private final TdlibAccount account;
 
     private final long userId;
+    private String username;
     private final String name, phone;
     private ImageFile avatar, avatarFull;
     private final AvatarPlaceholder avatarPlaceholder;
@@ -319,8 +331,11 @@ public class DrawerHeaderView extends View implements Destroyable, GlobalAccount
       userId = account.getKnownUserId();
       if (account.hasUserInfo()) {
         name = account.getName();
-        if (Settings.instance().needHidePhoneNumber()) {
-          phone = Strings.replaceNumbers(Strings.formatPhone(account.getPhoneNumber()));
+        username = account.getUsername();
+        if (ExtendedConfig.instance().get(ExtendedConfig.Setting.HIDE_PHONE_NUMBER) && username != null) {
+          phone = "@" + username;
+        } else if (ExtendedConfig.instance().get(ExtendedConfig.Setting.HIDE_PHONE_NUMBER) && username == null) {
+          phone = String.valueOf(userId);
         } else {
           phone = Strings.formatPhone(account.getPhoneNumber());
         }

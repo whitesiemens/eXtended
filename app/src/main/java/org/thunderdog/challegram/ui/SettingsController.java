@@ -146,7 +146,7 @@ public class SettingsController extends ViewController<Void> implements
 
   @Override
   public void onSettingsChanged(ExtendedConfig.Setting setting, boolean newVal, boolean oldVal) {
-    if (setting == ExtendedConfig.Setting.SHOW_IDS) {
+    if (setting == ExtendedConfig.Setting.HIDE_PHONE_NUMBER || setting == ExtendedConfig.Setting.SHOW_IDS) {
       this.contentView.setAdapter(adapter);
     }
   }
@@ -578,7 +578,11 @@ public class SettingsController extends ViewController<Void> implements
         } else if (itemId == R.id.btn_peer_id) {
           view.setData(Strings.buildCounter(tdlib.myUserId(true)));
         } else if (itemId == R.id.btn_phone) {
-          view.setData(myPhone);
+          if (ExtendedConfig.instance().get(ExtendedConfig.Setting.HIDE_PHONE_NUMBER)) {
+            view.setData(R.string.NumberHidden)
+          } else {
+            view.setData(myPhone);
+          }
         } else if (itemId == R.id.btn_bio) {
           TdApi.FormattedText text;
           if (about == null) {
@@ -754,6 +758,7 @@ public class SettingsController extends ViewController<Void> implements
     tdlib.listeners().addOptionsListener(this);
     TGLegacyManager.instance().addEmojiListener(adapter);
     TdlibManager.instance().global().addTokenStateListener(this);
+    ExtendedConfig.instance().addSettingsListener(this);
 
     loadActiveSessions();
 
@@ -943,6 +948,7 @@ public class SettingsController extends ViewController<Void> implements
     tdlib.listeners().unsubscribeFromSessionUpdates(this);
     tdlib.listeners().removeOptionListener(this);
     TGLegacyManager.instance().removeEmojiListener(adapter);
+    ExtendedConfig.instance().removeSettingsListener(this);
     TdlibManager.instance().global().removeTokenStateListener(this);
     headerCell.performDestroy();
   }
